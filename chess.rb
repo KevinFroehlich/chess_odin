@@ -100,19 +100,33 @@ class GameController
     end
 
     def valid_move?(piece_position, target_position, kind)
+        valid_pawn_move?(piece_position, target_position) if kind == 'pawn'
     end
 
     def valid_pawn_move?(piece_position, target_position)
         if @active_player.color == 'white'
-            attack_moves = [[1, 1], [1,-1]]
+            attack_moves = [[1, 1], [- 1, 1]]
+            valid_moves = attack_moves.map do |column, row| 
+                 [column + piece_position[0], row + piece_position[1]]
+            end
+            .select do |column, row| 
+                 column.between?(0,9) && row.between?(0,9) && @board.board["#{column}#{row}"] != nil && @board.board["#{column}#{row}"].color != @active_player.color 
+            end
+            valid_moves << [piece_position[0], piece_position[1] + 1 ] if @board.board["#{piece_position[0] }#{piece_position[1] + 1 }"] == nil
+           
+            valid_moves.include?(target_position)
+        else
+            attack_moves = [[-1, 1], [-1,-1]]
             valid_moves = attack_moves.map do |column, row| 
                 [column + piece_position[0], row + piece_position[1]]
             end
-            .select { |move| move.all? {|num| num.between?(0,9)} }
-        end
-            p valid_moves
-        
-        
+            .select do |column, row| 
+                column.between?(0,9) && row.between?(0,9) && @board.board["#{column}#{row}"] != nil && @board.board["#{column}#{row}"].color != @active_player.color 
+            end
+            valid_moves << [piece_position[0], piece_position[1] - 1 ] if @board.board["#{piece_position[0] }#{piece_position[1] + 1 }"] == nil
+
+            valid_moves.includes?(target_position)
+        end  
     end
 
 
@@ -128,4 +142,4 @@ game = GameController.new
 
 
 p game.board
-p game.valid_pawn_move?([1,1], [1,3])
+p game.valid_pawn_move?([7,6], [6,7])
