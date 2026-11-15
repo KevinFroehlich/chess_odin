@@ -170,6 +170,16 @@ class GameController
     end
   end
 
+  def get_enemy_king_coordinates
+    enemy_king = if @active_player.color == 'white'
+                   @board.board.values.compact.find { |piece| piece.kind == 'king' && piece.color == 'black' }
+                 else
+                   @board.board.values.compact.find { |piece| piece.kind == 'king' && piece.color == 'white' }
+                 end
+
+    @board.board.key(enemy_king).split('').map { |coordinate| coordinate.to_i }
+  end
+
   def make_move
     loop do
       piece_position = get_piece_position
@@ -177,6 +187,8 @@ class GameController
       kind = @board.board["#{piece_position[0]}#{piece_position[1]}"].kind
 
       if valid_move?(piece_position, target_position, kind)
+        puts "Player #{@active_player.color.capitalize} says check." if valid_move?(target_position,
+                                                                                    get_enemy_king_coordinates, kind)
         @board.board["#{target_position[0]}#{target_position[1]}"] =
           @board.board["#{piece_position[0]}#{piece_position[1]}"]
         @board.board["#{piece_position[0]}#{piece_position[1]}"] = nil

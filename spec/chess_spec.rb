@@ -205,5 +205,58 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_move?' do
+      context 'if the move is valid and kind is pawn' do
+        it 'returns true' do
+          expect(subject.valid_move?([1, 2], [1, 3], 'pawn')).to be(true)
+        end
+      end
+      context 'if the move is invalid and kind is pawn' do
+        it 'returns true' do
+          expect(subject.valid_move?([1, 2], [1, 4], 'pawn')).to be(false)
+        end
+      end
+    end
+
+    describe '#make_move' do
+      context 'if the player inputs are a valid move' do
+        it 'changes the target_position and piece_position accordingly' do
+          allow(subject).to receive(:get_piece_position).and_return([1, 2])
+          allow(subject).to receive(:get_target_position).and_return([1, 3])
+          subject.make_move
+          expect(subject.board.board['12']).to eq(nil)
+          expect(subject.board.board['13']).to be_a(Piece)
+        end
+      end
+      context 'if the player inputs are an invalid move' do
+        it 'loops an error message until a valid input is given' do
+          allow(subject).to receive(:get_piece_position).and_return([1, 2], [1, 2])
+          allow(subject).to receive(:get_target_position).and_return([1, 4], [1, 3])
+          expect(subject).to receive(:puts).with('Invalid move detected. Please enter a valid move.').once
+          subject.make_move
+        end
+      end
+      context 'if the player inputs are valid, the enemy king is black and in reach of the moved pieces next attack' do
+        it 'declares a check position' do
+          subject.board.board['58'] = nil
+          subject.board.board['24'] = Piece.new('king', 'black')
+          allow(subject).to receive(:get_piece_position).and_return([1, 2])
+          allow(subject).to receive(:get_target_position).and_return([1, 3])
+          expect(subject).to receive(:puts).with('Player White says check.').once
+          subject.make_move
+        end
+      end
+      context 'if the player inputs are valid, the enemy king is white and in reach of the moved pieces next attack' do
+        it 'declares a check position' do
+          subject.alternate_player
+          subject.board.board['51'] = nil
+          subject.board.board['25'] = Piece.new('king', 'white')
+          allow(subject).to receive(:get_piece_position).and_return([1, 7])
+          allow(subject).to receive(:get_target_position).and_return([1, 6])
+          expect(subject).to receive(:puts).with('Player Black says check.').once
+          subject.make_move
+        end
+      end
+    end
   end
 end
