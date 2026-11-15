@@ -258,5 +258,60 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_rook_move?' do
+      context 'if given an upwards move with no pieces in between toward an empty square' do
+        it 'returns true' do
+          subject.board.board['13'] = Piece.new('rook', 'white')
+          expect(subject.valid_rook_move?([1, 3], [1, 6])).to be(true)
+        end
+      end
+      context 'if given an upwards move with pieces in between the target destination' do
+        it 'returns false' do
+          subject.board.board['13'] = Piece.new('rook', 'white')
+          subject.board.board['15'] = Piece.new('pawn', 'black')
+          expect(subject.valid_rook_move?([1, 3], [1, 6])).to be(false)
+        end
+      end
+      context 'if given an upwards move with pieces in between toward an enemy piece' do
+        it 'returns false' do
+          subject.board.board['1'] = Piece.new('rook', 'white')
+          subject.board.board['15'] = Piece.new('pawn', 'black')
+          expect(subject.valid_rook_move?([1, 3], [1, 7])).to be(false)
+        end
+      end
+      context 'if given a rightwards move with no pieces in between toward an empty square' do
+        it 'returns true' do
+          subject.board.board['14'] = Piece.new('rook', 'white')
+          expect(subject.valid_rook_move?([1, 4], [4, 4])).to be(true)
+        end
+      end
+      context 'if given a leftwards move with pieces in between toward an empty square ' do
+        it 'returns false' do
+          subject.board.board['84'] = Piece.new('rook', 'white')
+          subject.board.board['24'] = Piece.new('pawn', 'black')
+          expect(subject.valid_rook_move?([8, 4], [1, 4])).to be(false)
+        end
+      end
+      context 'if given a downwards move with pieces in between toward an empty square ' do
+        it 'returns false' do
+          subject.board.board['86'] = Piece.new('rook', 'white')
+          subject.board.board['84'] = Piece.new('pawn', 'black')
+          expect(subject.valid_rook_move?([8, 6], [8, 3])).to be(false)
+        end
+      end
+      context 'if given a downwards move with no pieces in between toward an empty square ' do
+        it 'returns true' do
+          subject.board.board['86'] = Piece.new('rook', 'white')
+          expect(subject.valid_rook_move?([8, 6], [8, 3])).to be(true)
+        end
+      end
+      context 'if given a downwards move with no pieces in between toward an enemy piece ' do
+        it 'returns false' do
+          subject.alternate_player
+          subject.board.board['86'] = Piece.new('rook', 'black')
+          expect(subject.valid_rook_move?([8, 6], [8, 2])).to be(true)
+        end
+      end
+    end
   end
 end
