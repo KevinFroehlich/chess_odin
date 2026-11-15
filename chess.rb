@@ -184,6 +184,11 @@ class GameController
   end
 
   def valid_rook_move?(piece_position, target_position)
+    valid_moves = get_valid_rook_moves(piece_position, target_position)
+    no_pieces_in_rook_path?(valid_moves, piece_position, target_position)
+  end
+
+  def get_valid_rook_moves(piece_position, target_position)
     moves = []
     (1..7).each do |num|
       moves << [num, 0]
@@ -191,20 +196,22 @@ class GameController
       moves << [0, num]
       moves << [0, -num]
     end
-    valid_moves = moves.map do |column, row|
+    moves.map do |column, row|
       [column + piece_position[0], row + piece_position[1]]
     end
-                       .select do |column, row|
-                         column.between?(1,
-                                         8) && row.between?(1,
-                                                            8) && (@board.board["#{column}#{row}"].nil? || @board.board["#{column}#{row}"].color != @active_player.color)
-                       end
-    if valid_moves.include?(target_position)
+         .select do |column, row|
+           column.between?(1,
+                           8) && row.between?(1,
+                                              8) && (@board.board["#{column}#{row}"].nil? || @board.board["#{column}#{row}"].color != @active_player.color)
+         end
+  end
 
+  def no_pieces_in_rook_path?(valid_moves, piece_position, target_position)
+    if valid_moves.include?(target_position)
       return true if target_position[0] - piece_position[0] == 1 || target_position[1] - piece_position[1] == 1
 
       if target_position[0] - piece_position[0] < 0
-        (target_position[0] + 1..piece_position[0] - 1).all? do |y|
+        (piece_position[0] - 1).downto(target_position[0] + 1).to_a.all? do |y|
           @board.board["#{y}#{target_position[1]}"].nil?
         end
       elsif target_position[0] - piece_position[0] > 0
@@ -212,7 +219,7 @@ class GameController
           @board.board["#{y}#{target_position[1]}"].nil?
         end
       elsif target_position[1] - piece_position[1] < 0
-        (target_position[1] + 1..piece_position[1] - 1).all? do |x|
+        (piece_position[1] - 1).downto(target_position[1] + 1).to_a.all? do |x|
           @board.board["#{target_position[0]}#{x}"].nil?
         end
       elsif target_position[1] - piece_position[1] > 0
@@ -294,5 +301,4 @@ class GameController
 end
 
 game = GameController.new
-game.make_move
-game.board.print_board
+p game.valid_rook_move?([1, 3], [1, 4])
