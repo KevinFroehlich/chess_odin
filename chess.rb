@@ -44,6 +44,53 @@ class GameBoard
     end
     board
   end
+
+  def print_board
+    print_board = []
+    (1..8).each do |row|
+      (1..8).each do |column|
+        if @board["#{column}#{row}"].nil?
+          print_board << ' '
+        elsif @board["#{column}#{row}"].kind == 'pawn' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♙'
+        elsif @board["#{column}#{row}"].kind == 'rook' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♖'
+        elsif @board["#{column}#{row}"].kind == 'bishop' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♗'
+        elsif @board["#{column}#{row}"].kind == 'knight' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♘'
+        elsif @board["#{column}#{row}"].kind == 'king' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♔'
+        elsif @board["#{column}#{row}"].kind == 'queen' && @board["#{column}#{row}"].color == 'white'
+          print_board << '♕'
+        elsif @board["#{column}#{row}"].kind == 'pawn' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♟'
+        elsif @board["#{column}#{row}"].kind == 'rook' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♜'
+        elsif @board["#{column}#{row}"].kind == 'bishop' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♝'
+        elsif @board["#{column}#{row}"].kind == 'knight' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♞'
+        elsif @board["#{column}#{row}"].kind == 'king' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♚'
+        elsif @board["#{column}#{row}"].kind == 'queen' && @board["#{column}#{row}"].color == 'black'
+          print_board << '♛'
+        end
+      end
+    end
+
+    row_arr = []
+    8.times do
+      print_row = '|'
+      8.times do
+        print_row << print_board.shift + '|'
+      end
+      row_arr << print_row
+    end
+    row_arr.reverse.each do |sentence|
+      puts sentence
+    end
+  end
 end
 
 class Player
@@ -247,5 +294,5 @@ class GameController
 end
 
 game = GameController.new
-game.board.board['24'] = Piece.new('pawn', 'black')
-p game.valid_rook_move?([8, 4], [1, 4])
+game.make_move
+game.board.print_board
