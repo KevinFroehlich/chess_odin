@@ -377,5 +377,49 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_queen_move?' do
+      context 'if given a target position that is an empty square and valid and orthogonal' do
+        it 'returns true' do
+          expect(subject.valid_queen_move?([4, 4], [4, 5])).to be(true)
+        end
+      end
+      context 'if given a target position that is an empty square and valid and diagonal' do
+        it 'returns true' do
+          expect(subject.valid_queen_move?([4, 4], [5, 3])).to be(true)
+        end
+      end
+      context 'if given a target position that is occupied by an enemy piece and is valid and orthogonal' do
+        it 'returns true' do
+          expect(subject.valid_queen_move?([4, 4], [4, 7])).to be(true)
+        end
+      end
+      context 'if given a target position that is occupied by an enemy piece and is valid and diagonal' do
+        it 'returns true' do
+          expect(subject.valid_queen_move?([4, 4], [1, 7])).to be(true)
+        end
+      end
+      context 'if given a target position that is invalid orthogonally' do
+        it 'returns false' do
+          expect(subject.valid_queen_move?([4, 4], [4, 8])).to be(false)
+        end
+      end
+      context 'if given a target position that is invalid diagonally' do
+        it 'returns false' do
+          expect(subject.valid_queen_move?([3, 4], [7, 8])).to be(false)
+        end
+      end
+      context 'if given a target position that is occupied by a friendly piece and is valid and orthogonal' do
+        it 'returns false' do
+          subject.board.board['45'] = Piece.new('pawn', 'white')
+          expect(subject.valid_queen_move?([4, 4], [4, 5])).to be(false)
+        end
+      end
+      context 'if given a target position that is occupied by a friendly piece and is valid and diagonal' do
+        it 'returns false' do
+          subject.board.board['36'] = Piece.new('pawn', 'white')
+          expect(subject.valid_queen_move?([4, 5], [3, 6])).to be(false)
+        end
+      end
+    end
   end
 end
