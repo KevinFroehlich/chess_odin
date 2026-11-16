@@ -325,5 +325,33 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_bishop_move?' do
+      context 'if given a target position that is empty and valid' do
+        it 'returns true' do
+          expect(subject.valid_bishop_move?([4, 4], [2, 6])).to be(true)
+        end
+      end
+      context 'if given a target position that holds an enemy piece and is valid' do
+        it 'returns true' do
+          expect(subject.valid_bishop_move?([4, 4], [7, 7])).to be(true)
+        end
+      end
+      context 'if given a target position that is obstructed by an enemy piece' do
+        it 'returns true' do
+          expect(subject.valid_bishop_move?([4, 4], [8, 8])).to be(false)
+        end
+      end
+      context 'if given a target position that is held by a friendly piece' do
+        it 'returns false' do
+          expect(subject.valid_bishop_move?([4, 4], [2, 2])).to be(false)
+        end
+      end
+      context 'if given a target position that is obstructed by a friendly piece' do
+        it 'returns false' do
+          subject.board.board['53'] = Piece.new('pawn', 'white')
+          expect(subject.valid_bishop_move?([4, 4], [6, 2])).to be(false)
+        end
+      end
+    end
   end
 end

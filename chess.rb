@@ -1,5 +1,6 @@
 require_relative 'rook_methods'
 require_relative 'knight_methods'
+require_relative 'bishop_methods'
 
 class Piece
   attr_accessor :kind, :color
@@ -83,13 +84,14 @@ class GameBoard
     end
 
     row_arr = []
-    8.times do
-      print_row = '|'
+    8.times do |index|
+      print_row = "#{index + 1} |"
       8.times do
         print_row << print_board.shift + '|'
       end
       row_arr << print_row
     end
+    puts '   a b c d e f g h'
     row_arr.reverse.each do |sentence|
       puts sentence
     end
@@ -250,11 +252,13 @@ class GameController
   end
 
   def valid_move?(piece_position, target_position, kind)
-    valid_pawn_move?(piece_position, target_position) if kind == 'pawn'
-    valid_rook_move?(piece_position, target_position) if kind == 'rook'
-    valid_knight_move?(piece_position, target_position) if kind == 'knight'
+    case kind
+    when 'pawn'
+      valid_pawn_move?(piece_position, target_position)
+    when 'rook'
+      valid_rook_move?(piece_position, target_position)
+    when 'knight'
+      valid_knight_move?(piece_position, target_position)
+    end
   end
 end
-
-game = GameController.new
-p game.valid_knight_move?([2, 1], [1, 3])
