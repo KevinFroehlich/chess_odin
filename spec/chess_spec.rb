@@ -1,5 +1,5 @@
 require_relative '../chess'
-
+require_relative '../rook_methods'
 describe Piece do
   it 'initializes an object with the given instance variables' do
     piece = Piece.new('pawn', 'white')

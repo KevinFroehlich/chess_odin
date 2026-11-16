@@ -2,11 +2,11 @@ require_relative 'chess'
 
 class GameController
   def valid_rook_move?(piece_position, target_position)
-    valid_moves = get_valid_rook_moves(piece_position, target_position)
+    valid_moves = get_valid_rook_moves(piece_position)
     no_pieces_in_rook_path?(valid_moves, piece_position, target_position)
   end
 
-  def get_valid_rook_moves(piece_position, target_position)
+  def get_valid_rook_moves(piece_position)
     moves = []
     (1..7).each do |num|
       moves << [num, 0]

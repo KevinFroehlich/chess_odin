@@ -1,4 +1,5 @@
 require_relative 'rook_methods'
+require_relative 'knight_methods'
 
 class Piece
   attr_accessor :kind, :color
@@ -254,4 +255,4 @@ class GameController
 end
 
 game = GameController.new
-p game.valid_rook_move?([1, 3], [1, 4])
+p game.valid_knight_move?([2, 1], [1, 3])
