@@ -251,6 +251,8 @@ class GameController
 
   def valid_move?(piece_position, target_position, kind)
     valid_pawn_move?(piece_position, target_position) if kind == 'pawn'
+    valid_rook_move?(piece_position, target_position) if kind == 'rook'
+    valid_knight_move?(piece_position, target_position) if kind == 'knight'
   end
 end
 

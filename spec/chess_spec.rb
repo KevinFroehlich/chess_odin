@@ -313,5 +313,17 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_knight_move?' do
+      context 'if given a target_position for a valid move' do
+        it 'returns true' do
+          expect(subject.valid_knight_move?([2, 1], [1, 3])).to be(true)
+        end
+      end
+      context 'if given a target_position for an invalid move' do
+        it 'returns false' do
+          expect(subject.valid_knight_move?([2, 1], [1, 4])).to be(false)
+        end
+      end
+    end
   end
 end
