@@ -3,6 +3,7 @@ require_relative 'knight_methods'
 require_relative 'bishop_methods'
 require_relative 'king_methods'
 require_relative 'queen_methods'
+require_relative 'pawn_methods'
 
 class Piece
   attr_accessor :kind, :color
