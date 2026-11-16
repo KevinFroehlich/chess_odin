@@ -47,7 +47,7 @@ class GameController
 
   def trans_pawn(piece_position)
     loop do
-      p replacement = gets.chomp.downcase
+      replacement = gets.chomp.downcase
 
       if @board.board.values.compact.map { |tile| tile.kind }.include?(replacement)
         @board.board["#{piece_position[0]}#{piece_position[1]}"].kind = replacement

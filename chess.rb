@@ -234,6 +234,3 @@ class GameController
     end
   end
 end
-
-game = GameController.new
-game.game_loop

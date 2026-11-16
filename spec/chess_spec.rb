@@ -176,6 +176,7 @@ describe GameBoard do
     describe '#trans_pawn' do
       context 'if it receives an incorrect input' do
         it 'returns an error message until it gets a correct input' do
+          subject.board.board['66'] = Piece.new('pawn', 'white')
           allow(subject).to receive(:gets).and_return('dhaklf', 'queen')
           expect(subject).to receive(:puts).with('Please enter a valid chesspiece name to replace your pawn with').once
           subject.trans_pawn([6, 6])
@@ -184,6 +185,7 @@ describe GameBoard do
       context 'if it receives a correct input' do
         it 'creates a new Piece object at the input location with correct kind and color attributes' do
           allow(subject).to receive(:gets).and_return('queen')
+          subject.board.board['66'] = Piece.new('pawn', 'white')
           subject.trans_pawn([6, 6])
           expect(subject.board.board['66']).to be_a(Piece)
           expect(subject.board.board['66'].kind).to eq('queen')
