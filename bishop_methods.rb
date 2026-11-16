@@ -1,5 +1,3 @@
-require_relative 'chess'
-
 class GameController
   def valid_bishop_move?(piece_position, target_position)
     tpos = target_position

@@ -1,4 +1,3 @@
-require_relative 'chess'
 class GameController
   def valid_knight_move?(piece_position, target_position)
     tpos = target_position

@@ -1,5 +1,3 @@
-require_relative 'chess'
-
 class GameController
   def valid_pawn_move?(piece_position, target_position)
     if @active_player.color == 'white'
@@ -47,12 +45,12 @@ class GameController
     end
   end
 
-  def trans_pawn(target_position)
+  def trans_pawn(piece_position)
     loop do
-      replacement = gets.chomp.downcase
+      p replacement = gets.chomp.downcase
 
       if @board.board.values.compact.map { |tile| tile.kind }.include?(replacement)
-        @board.board["#{target_position[0]}#{target_position[1]}"] = Piece.new(replacement, @active_player.color)
+        @board.board["#{piece_position[0]}#{piece_position[1]}"].kind = replacement
         break
       end
       puts 'Please enter a valid chesspiece name to replace your pawn with'

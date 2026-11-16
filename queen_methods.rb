@@ -1,5 +1,3 @@
-require_relative 'chess'
-
 class GameController
   def valid_queen_move?(piece_position, target_position)
     return true if check_diagonally(piece_position,

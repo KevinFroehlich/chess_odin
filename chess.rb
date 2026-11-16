@@ -125,12 +125,27 @@ class GameController
                      else
                        @p1
                      end
+    puts "Player #{@active_player.color.capitalize}'s turn."
+  end
+
+  def game_loop
+    puts 'Player White starts!'
+    loop do
+      @board.print_board
+      make_move
+      if check_winner?
+        puts "Player #{@active_player.color.capitalize} wins the game via check-mate. Congrats!"
+        break
+      end
+      alternate_player
+    end
   end
 
   def get_piece_position
     loop do
+      print 'Choose one of your pieces. Enter a1, b1 etc.'
       piece_position = gets.downcase.chomp.split('')
-      piece_position[0] = (piece_position[0].ord - (piece_position[0].ord - 1)).to_s
+      piece_position[0] = (piece_position[0].ord - 96).to_s
       piece_position = piece_position.join('')
 
       if !@board.board[piece_position].nil? && @board.board[piece_position].color == @active_player.color
@@ -143,8 +158,9 @@ class GameController
 
   def get_target_position
     loop do
+      print 'Choose a tile to move towards. Enter a1, b1 etc.'
       target_position = gets.downcase.chomp.split('')
-      target_position[0] = (target_position[0].ord - (target_position[0].ord - 1)).to_s
+      p target_position[0] = (target_position[0].ord - 96).to_s
       target_position = target_position.join('')
 
       unless !@board.board.keys.include?(target_position) || !@board.board[target_position].nil? && @board.board[target_position].color == @active_player.color
@@ -152,64 +168,6 @@ class GameController
       end
 
       puts 'Incorrect input, please choose an empty tile or a tile occupied by an opposing piece as your destination.'
-    end
-  end
-
-  def valid_pawn_move?(piece_position, target_position)
-    if @active_player.color == 'white'
-      attack_moves = [[1, 1], [- 1, 1]]
-      valid_moves = attack_moves.map do |column, row|
-        [column + piece_position[0], row + piece_position[1]]
-      end
-                                .select do |column, row|
-                                  column.between?(1,
-                                                  8) && row.between?(1,
-                                                                     8) && !@board.board["#{column}#{row}"].nil? && @board.board["#{column}#{row}"].color != @active_player.color
-                                end
-      if @board.board["#{piece_position[0]}#{piece_position[1] + 1}"].nil?
-        valid_moves << [piece_position[0],
-                        piece_position[1] + 1]
-      end
-
-      valid_moves.include?(target_position)
-    else
-      attack_moves = [[1, -1], [-1, -1]]
-      valid_moves = attack_moves.map do |column, row|
-        [column + piece_position[0], row + piece_position[1]]
-      end
-                                .select do |column, row|
-                                  column.between?(1,
-                                                  8) && row.between?(1,
-                                                                     8) && !@board.board["#{column}#{row}"].nil? && @board.board["#{column}#{row}"].color != @active_player.color
-                                end
-      if @board.board["#{piece_position[0]}#{piece_position[1] - 1}"].nil?
-        valid_moves << [piece_position[0],
-                        piece_position[1] - 1]
-      end
-
-      valid_moves.include?(target_position)
-    end
-  end
-
-  def pawn_trans?(target_position)
-    if target_position[1] == 8 && @active_player.color == 'white'
-      true
-    elsif target_position[1] == 1 && @active_player.color == 'black'
-      true
-    else
-      false
-    end
-  end
-
-  def trans_pawn(target_position)
-    loop do
-      replacement = gets.chomp.downcase
-
-      if @board.board.values.compact.map { |tile| tile.kind }.include?(replacement)
-        @board.board["#{target_position[0]}#{target_position[1]}"] = Piece.new(replacement, @active_player.color)
-        break
-      end
-      puts 'Please enter a valid chesspiece name to replace your pawn with'
     end
   end
 
@@ -257,11 +215,25 @@ class GameController
   def valid_move?(piece_position, target_position, kind)
     case kind
     when 'pawn'
-      valid_pawn_move?(piece_position, target_position)
+      if valid_pawn_move?(piece_position, target_position)
+        trans_pawn(piece_position) if pawn_trans?(target_position)
+        true
+      else
+        false
+      end
     when 'rook'
       valid_rook_move?(piece_position, target_position)
     when 'knight'
       valid_knight_move?(piece_position, target_position)
+    when 'bishop'
+      valid_bishop_move?(piece_position, target_position)
+    when 'queen'
+      valid_queen_move?(piece_position, target_position)
+    when 'king'
+      valid_king_move?(piece_position, target_position)
     end
   end
 end
+
+game = GameController.new
+game.game_loop

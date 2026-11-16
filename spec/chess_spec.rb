@@ -101,9 +101,8 @@ describe GameBoard do
       context 'if the input is incorrect' do
         it 'returns an error message' do
           allow(subject).to receive(:gets).and_return('aa', 'a1')
-          expect do
-            subject.get_piece_position
-          end.to output("Incorrect input, please choose one of your pieces to move.\n").to_stdout
+          expect(subject).to receive(:puts).with('Incorrect input, please choose one of your pieces to move.').once
+          subject.get_piece_position
         end
       end
 
@@ -193,7 +192,7 @@ describe GameBoard do
       end
     end
     describe '#check_winner?' do
-      context 'if the inactive player has no king on the board' do
+      context 'if the inactive player is black and has no king on the board' do
         it 'returns true' do
           subject.board.board['58'] = nil
           expect(subject.check_winner?).to be(true)
@@ -201,6 +200,19 @@ describe GameBoard do
       end
       context 'if the inactive player has a king on the board' do
         it 'returns false' do
+          expect(subject.check_winner?).to be(false)
+        end
+      end
+      context 'if the inactive player is white and has no king on the board' do
+        it 'returns true' do
+          subject.alternate_player
+          subject.board.board['51'] = nil
+          expect(subject.check_winner?).to be(true)
+        end
+      end
+      context 'if the inactive player is white and has a king on the board' do
+        it 'returns false' do
+          subject.alternate_player
           expect(subject.check_winner?).to be(false)
         end
       end
