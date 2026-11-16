@@ -353,5 +353,29 @@ describe GameBoard do
         end
       end
     end
+    describe '#valid_king_move?' do
+      context 'if given a target position that is an empty square and valid' do
+        it 'returns true' do
+          expect(subject.valid_king_move?([4, 4], [4, 5])).to be(true)
+        end
+      end
+      context 'if given a target position that is occupied by an enemy piece and is valid' do
+        it 'returns true' do
+          subject.board.board['45'] = Piece.new('pawn', 'black')
+          expect(subject.valid_king_move?([4, 4], [4, 5])).to be(true)
+        end
+      end
+      context 'if given a target position that is invalid' do
+        it 'returns false' do
+          expect(subject.valid_king_move?([4, 4], [4, 6])).to be(false)
+        end
+      end
+      context 'if given a target position that is occupied by a friendly piece and is valid' do
+        it 'returns false' do
+          subject.board.board['45'] = Piece.new('pawn', 'white')
+          expect(subject.valid_king_move?([4, 4], [4, 5])).to be(false)
+        end
+      end
+    end
   end
 end
