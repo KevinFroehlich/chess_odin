@@ -4,6 +4,7 @@ require_relative 'bishop_methods'
 require_relative 'king_methods'
 require_relative 'queen_methods'
 require_relative 'pawn_methods'
+require 'yaml'
 
 class Piece
   attr_accessor :kind, :color
@@ -130,6 +131,7 @@ class GameController
 
   def game_loop
     puts 'Player White starts!'
+    puts "Enter 'save' to save or 'load' to load, 'exit' for exit."
     loop do
       @board.print_board
       make_move
@@ -141,10 +143,41 @@ class GameController
     end
   end
 
+  def ai_game_loop
+    puts 'Player White starts!'
+    puts "Enter 'save' to save or 'load' to load, 'exit' for exit."
+    loop do
+      @board.print_board
+      make_move
+      if check_winner?
+        puts "Player #{@active_player.color.capitalize} wins the game via check-mate. Congrats!"
+        break
+      end
+      alternate_player
+      ai_move
+      if check_winner?
+        puts "Player #{@active_player.color.capitalize} wins the game via check-mate. Congrats!"
+        break
+      end
+      alternate_player
+    end
+  end
+
   def get_piece_position
     loop do
       print 'Choose one of your pieces. Enter a1, b1 etc.'
-      piece_position = gets.downcase.chomp.split('')
+      piece_position = gets.downcase.chomp
+      if piece_position == 'save'
+        save_game
+        next
+      elsif piece_position == 'load'
+        load_game
+        @board.print_board
+        next
+      elsif piece_position == 'exit'
+        exit
+      end
+      piece_position = piece_position.split('')
       piece_position[0] = (piece_position[0].ord - 96).to_s
       piece_position = piece_position.join('')
 
@@ -159,7 +192,17 @@ class GameController
   def get_target_position
     loop do
       print 'Choose a tile to move towards. Enter a1, b1 etc.'
-      target_position = gets.downcase.chomp.split('')
+      target_position = gets.downcase.chomp
+      if target_position == 'save'
+        save_game
+        next
+      elsif target_position == 'load'
+        load_game
+        next
+      elsif target_position == 'exit'
+        exit
+      end
+      target_position = target_position.split('')
       p target_position[0] = (target_position[0].ord - 96).to_s
       target_position = target_position.join('')
 
@@ -212,6 +255,27 @@ class GameController
     end
   end
 
+  def ai_move
+    loop do
+      piece_position = [rand(1..8), rand(1..8)]
+      if @board.board["#{piece_position[0]}#{piece_position[1]}"].nil? || @board.board["#{piece_position[0]}#{piece_position[1]}"].color != @active_player.color
+        next
+      end
+
+      target_position = [rand(1..8), rand(1..8)]
+      kind = @board.board["#{piece_position[0]}#{piece_position[1]}"].kind
+
+      next unless valid_move?(piece_position, target_position, kind)
+
+      puts "Player #{@active_player.color.capitalize} says check." if valid_move?(target_position,
+                                                                                  get_enemy_king_coordinates, kind)
+      @board.board["#{target_position[0]}#{target_position[1]}"] =
+        @board.board["#{piece_position[0]}#{piece_position[1]}"]
+      @board.board["#{piece_position[0]}#{piece_position[1]}"] = nil
+      break
+    end
+  end
+
   def valid_move?(piece_position, target_position, kind)
     case kind
     when 'pawn'
@@ -233,4 +297,22 @@ class GameController
       valid_king_move?(piece_position, target_position)
     end
   end
+
+  def save_game
+    File.write('save.yaml', YAML.dump(self))
+    puts 'Game saved.'
+  end
+
+  def load_game
+    game = YAML.unsafe_load_file('save.yaml')
+    @active_player = game.active_player
+    @board = game.board
+    @p1 = game.p1
+    @p2 = game.p2
+    puts 'Game loaded'
+    puts "Player #{@active_player.color}'s turn."
+  end
 end
+
+game = GameController.new
+game.ai_game_loop

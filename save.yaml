@@ -1,0 +1,136 @@
+--- !ruby/object:GameController
+p1: &1 !ruby/object:Player
+  color: white
+p2: !ruby/object:Player
+  color: black
+board: !ruby/object:GameBoard
+  board:
+    '13': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '12':
+    '17': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '23':
+    '22': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '27': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '33':
+    '32': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '37': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '43':
+    '42': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '47':
+    '53': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '52':
+    '57': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '63':
+    '62': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '67': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '73':
+    '72': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '77': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '83':
+    '82': !ruby/object:Piece
+      kind: pawn
+      color: white
+    '87':
+    '14':
+    '24':
+    '34':
+    '44':
+    '54':
+    '64':
+    '74':
+    '84':
+    '15':
+    '25':
+    '35':
+    '45':
+    '55':
+    '65':
+    '75':
+    '85':
+    '16':
+    '26':
+    '36':
+    '46': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '56':
+    '66':
+    '76':
+    '86': !ruby/object:Piece
+      kind: pawn
+      color: black
+    '11': !ruby/object:Piece
+      kind: rook
+      color: white
+    '21': !ruby/object:Piece
+      kind: knight
+      color: white
+    '31': !ruby/object:Piece
+      kind: bishop
+      color: white
+    '41': !ruby/object:Piece
+      kind: queen
+      color: white
+    '51': !ruby/object:Piece
+      kind: king
+      color: white
+    '61': !ruby/object:Piece
+      kind: bishop
+      color: white
+    '71': !ruby/object:Piece
+      kind: knight
+      color: white
+    '81': !ruby/object:Piece
+      kind: rook
+      color: white
+    '18': !ruby/object:Piece
+      kind: rook
+      color: black
+    '28': !ruby/object:Piece
+      kind: knight
+      color: black
+    '38': !ruby/object:Piece
+      kind: bishop
+      color: black
+    '48': !ruby/object:Piece
+      kind: queen
+      color: black
+    '58': !ruby/object:Piece
+      kind: king
+      color: black
+    '68': !ruby/object:Piece
+      kind: bishop
+      color: black
+    '78': !ruby/object:Piece
+      kind: knight
+      color: black
+    '88': !ruby/object:Piece
+      kind: rook
+      color: black
+active_player: *1
